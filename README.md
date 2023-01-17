@@ -1,6 +1,8 @@
 # EWC Lambda Gridsearch
 
-A fairly basic script to search over a range of lambda values for Elastic Weight Consolidation. Different sequential tasks can be configured for testing, as well as different search parameters and base models. An overview of this program is below:
+A fairly basic script to search over a range of lambda values for Elastic Weight Consolidation. Different sequential tasks can be configured for testing, as well as different search parameters and base models. An overview of this program is below.
+
+This project is a spin off of a [much larger research project](https://github.com/hmcalister/Tensorflow-Intepretability-Project) undertaken at the University of Otago. This project was small part of the larger whole, but is interesting and independent enough to be preserved alone.
 
 ## Sequential Learning
 
