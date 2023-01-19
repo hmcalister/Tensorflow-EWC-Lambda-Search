@@ -4,8 +4,8 @@ import json
 import scipy
 
 LEGEND = True
-CURVE = lambda x,a,c,d: a*np.log(x+0.01)+c*x+d
-# CURVE = None
+# CURVE = lambda x,a,c,d: a*np.log(x+0.01)+c*x+d
+CURVE = None
 
 color = None if LEGEND else "k"
 
