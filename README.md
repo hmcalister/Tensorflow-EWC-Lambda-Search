@@ -4,6 +4,14 @@ A fairly basic script to search over a range of lambda values for Elastic Weight
 
 This project is a spin off of a [much larger research project](https://github.com/hmcalister/Tensorflow-Intepretability-Project) undertaken at the University of Otago. This project was small part of the larger whole, but is interesting and independent enough to be preserved alone.
 
+## Example Results
+
+![An example graph of multiple trials of EWC lambda search](images/exampleSearch.png)
+
+Above is a graph detailing many trials of sequential learning on the MNIST dataset. In the above, each trial is an attempt for a network to first classify digits 0,1,2 and then subsequently classify digits 3,4,5. To measure the performance of EWC in each trial we integrated (using a Riemann sum) over the loss of each task after it had been introduced. Therefore a good trial will have a low loss on all tasks once introduced, and will have a lower measure. In the graph above, we should see a clear minimum of the measure at some value of lambda - but instead we find a noisy region with no clear minimum. This shows that the stochastic nature of training is overwhelming the ability to measure EWC performance - each trial is (and each lambda test within each trial) is different enough to mask the EWC effect on the measure! At best we may be able to determine which weight importance measures are best from this data.
+
+See the below sections for a more detailed explanation of what this project attempts. 
+
 ## Sequential Learning
 
 Sequential Learning is a problem in AI research that focuses on how artificial neural networks train on several tasks in sequence. Traditionally, neural networks are trained on all available data simultaneously, allowing for the maximal performance across that data. It is not difficult to engineer a scenario in which data is not available all at once. Instead of training on all data at once, what if we trained a model on some first subset, then on a second set without using the first set again? This is the core of sequential learning.
