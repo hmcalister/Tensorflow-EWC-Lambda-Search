@@ -1,7 +1,6 @@
 # fmt: off
 import math
 from typing import List, Tuple
-from Utilities.Utils import normalize_img
 
 from .GenericTask import GenericTask
 
@@ -10,6 +9,11 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 import tensorflow_datasets as tfds
 # fmt: on
+
+def normalize_img(image, label):
+    """Normalizes images: `uint8` -> `float32`."""
+    return tf.cast(image, tf.float32) / 255., label  # type: ignore
+
 
 class TensorFlowDatasetTask(GenericTask):
     """
