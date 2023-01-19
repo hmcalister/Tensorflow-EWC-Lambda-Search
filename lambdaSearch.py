@@ -19,7 +19,7 @@ logger.addHandler(log_file_handler)
 import json
 import numpy as np
 from SequentialLearning.SequentialLearningManager import SequentialLearningManager
-from SequentialLearning.Tasks.MNISTClassificationTask import MNISTClassificationTask
+from SequentialLearning.Tasks.CIFAR10ClassificationTask import CIFAR10ClassificationTask as Task
 from SequentialLearning.EWC_Methods.EWC_Methods import *
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -51,10 +51,10 @@ ewc_method = EWC_Method.FISHER_MATRIX
 # Note tuple is ordered by (min_val, max_val)
 # For each trial a random low and high param are selected from this range
 SEARCH_LOW_PARAM_RANGE = (0, 0)
-SEARCH_HIGH_PARAM_RANGE = (50, 100)
+SEARCH_HIGH_PARAM_RANGE = (10, 20)
 
 # Number of steps for each range
-NUM_STEPS = 100
+NUM_STEPS = 20
 
 # Value which (high-low) must be smaller than to terminate
 # Note: For a non-recursive binary search (e.g. one pass only)
@@ -66,8 +66,14 @@ SEARCH_TERMINATION_THRESHOLD = 10
 
 MODEL_SAVE_PATH = "models/lambda_search_base"
 data_file = "data/lambda_search_fisher_data.json"
-with open(data_file, "x") as f:
-    json.dump([], f)
+try:
+    with open(data_file, "x") as f:
+        json.dump([], f)
+except FileExistsError as e:
+    print(f"WARNING: File {data_file} exists. Running this script will overwrite a previous data file!")
+    print("Move the previous data file to run this script")
+    print(e)
+    exit(1)
 
 task_head_layers = [
     [tf.keras.layers.Dense(len(labels))] for labels in task_classes
@@ -119,7 +125,7 @@ def create_and_save_base_model():
     # base model for sequential tasks
     # each model gets these layers as a base, then adds own head layers
     # i.e. these weights are *shared*
-    model_input_shape = (28, 28, 1)
+    model_input_shape = Task.IMAGE_SIZE 
     model_inputs = model_layer = tf.keras.Input(shape=model_input_shape)
     model_layer = tf.keras.layers.Conv2D(32, (3, 3), activation="relu", name="conv2d_0")(model_layer)
     model_layer = tf.keras.layers.MaxPool2D((2, 2))(model_layer)
@@ -159,7 +165,7 @@ def create_tasks(base_model: tf.keras.models.Model):
         curr_model = tf.keras.Model(
             inputs=base_model.inputs, outputs=curr_model_layer, name=f"task_{task_index+1}_model")
 
-        tasks.append(MNISTClassificationTask(
+        tasks.append(Task(
             name=f"Task {task_index+1}",
             model=curr_model,
             model_base_loss=loss_fn,
